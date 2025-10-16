@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>75 HARD Couples Edition Tracker</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .tagline {
+            font-size: 1.2em;
+            opacity: 0.95;
+            margin-bottom: 20px;
+        }
+
+        .stats-bar {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 10px;
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .card h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .task-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .task-checkbox {
+            width: 25px;
+            height: 25px;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+
+        .task-label {
+            flex: 1;
+            cursor: pointer;
+        }
+
+        .task-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 3px;
+        }
+
+        .task-description {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .completed {
+            background: #d4edda;
+        }
+
+        .completed .task-title {
+            text-decoration: line-through;
+            opacity: 0.7;
+        }
+
+        .week-challenge {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .week-challenge h3 {
+            margin-bottom: 10px;
+        }
+
+        .reflection-area {
+            margin-top: 20px;
+        }
+
+        .reflection-input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            margin-bottom: 10px;
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+            margin-left: 10px;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+
+        .progress-ring-circle {
+            transition: stroke-dashoffset 0.35s;
+            transform-origin: 50% 50%;
+        }
+
+        .day-selector {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .day-selector button {
+            background: #667eea;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .day-selector button:hover {
+            background: #5a67d8;
+        }
+
+        .current-day {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #333;
+            min-width: 150px;
+            text-align: center;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            margin-top: 20px;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .calendar-day.completed {
+            background: #28a745;
+            color: white;
+        }
+
+        .calendar-day.partial {
+            background: #ffc107;
+            color: white;
+        }
+
+        .calendar-day.missed {
+            background: #dc3545;
+            color: white;
+        }
+
+        .calendar-day.future {
+            background: #e9ecef;
+            color: #999;
+        }
+
+        .calendar-day.current {
+            border: 3px solid #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .motivational-quote {
+            text-align: center;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-style: italic;
+            color: #555;
+            font-size: 1.1em;
+        }
+
+        /* Partner Selection Screen */
+        .partner-selection {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .partner-selection.hidden {
+            display: none;
+        }
+
+        .partner-selection-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .partner-selection h2 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+
+        .partner-btn {
+            display: block;
+            width: 100%;
+            padding: 20px;
+            margin: 15px 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.3em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .partner-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .switch-partner-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .switch-partner-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .sync-status {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 0.85em;
+            color: #666;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .sync-status.syncing {
+            color: #667eea;
+        }
+
+        .sync-status.error {
+            color: #e74c3c;
+        }
+
+        @media (max-width: 768px) {
+            .switch-partner-btn {
+                font-size: 0.8em;
+                padding: 6px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Partner Selection Screen -->
+    <div id="partnerSelection" class="partner-selection">
+        <div class="partner-selection-content">
+            <h2>👥 Select Your Profile</h2>
+            <p style="color: #666; margin-bottom: 30px;">Choose which partner you are</p>
+            <button class="partner-btn" onclick="selectPartner('partner1')">🏋️ Partner 1</button>
+            <button class="partner-btn" onclick="selectPartner('partner2')">💪 Partner 2</button>
+        </div>
+    </div>
+
+    <!-- Sync Status Indicator -->
+    <div id="syncStatus" class="sync-status hidden">Last synced: Never</div>
+    <div class="container">
+        <div class="header">
+            <button class="switch-partner-btn" onclick="switchPartner()">Switch Partner</button>
+            <h1>💥 75 HARD COUPLES EDITION</h1>
+            <div class="tagline">Master Your Body. Expand Your Mind. Lead Together.</div>
+        </div>
+
+        <div class="motivational-quote" id="quote">
+            "The only person you are destined to become is the person you decide to be."
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat-item">
+                <div class="stat-number" id="currentDayNumber">1</div>
+                <div class="stat-label">Current Day</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="currentStreak">0</div>
+                <div class="stat-label">Day Streak</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="completionRate">0%</div>
+                <div class="stat-label">Today's Progress</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="weekNumber">1</div>
+                <div class="stat-label">Current Week</div>
+            </div>
+        </div>
+
+        <div class="day-selector">
+            <button onclick="changeDay(-1)">◀</button>
+            <div class="current-day" id="currentDayDisplay">Day 1 - Week 1</div>
+            <button onclick="changeDay(1)">▶</button>
+        </div>
+
+        <div class="week-challenge" id="weekChallenge">
+            <h3>Week 1 Challenge: Consistency</h3>
+            <p>No missed workouts, no excuses.</p>
+        </div>
+
+        <div class="main-grid">
+            <div class="card">
+                <h2>Partner 1 - Daily Tasks</h2>
+                <div id="partner1Tasks"></div>
+                <div class="reflection-area">
+                    <h3>What tested me today?</h3>
+                    <textarea class="reflection-input" id="partner1Reflection" placeholder="Write your reflection..."></textarea>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>Partner 2 - Daily Tasks</h2>
+                <div id="partner2Tasks"></div>
+                <div class="reflection-area">
+                    <h3>What tested me today?</h3>
+                    <textarea class="reflection-input" id="partner2Reflection" placeholder="Write your reflection..."></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Relationship Rep - Check-In</h2>
+            <div class="reflection-area">
+                <h3>How did you lead today?</h3>
+                <textarea class="reflection-input" id="leadReflection" placeholder="Share your leadership moments..."></textarea>
+                <h3>What can I do better tomorrow?</h3>
+                <textarea class="reflection-input" id="improveReflection" placeholder="Areas for improvement..."></textarea>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>75 Day Calendar Overview</h2>
+            <div class="calendar-grid" id="calendarGrid"></div>
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+            <button class="btn" onclick="saveDay()">Save Today's Progress</button>
+            <button class="btn btn-danger" onclick="resetChallenge()">Reset Challenge</button>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+    <script>
+        // =================================================================
+        // FIREBASE CONFIGURATION
+        // =================================================================
+        // TODO: Replace this with your own Firebase config
+        // Get this from: Firebase Console > Project Settings > Your apps > Web app
+        const firebaseConfig = {
+    apiKey: "AIzaSyCyJQGjgSjYHy-i384112oqsdvmlahFz7A",
+    authDomain: "hard-carina-jj.firebaseapp.com",
+    projectId: "hard-carina-jj",
+    storageBucket: "hard-carina-jj.firebasestorage.app",
+    messagingSenderId: "603040017873",
+    appId: "1:603040017873:web:d6859f5f7a1247f48244f0"
+};
+
+        // Initialize Firebase
+        let db = null;
+        let isFirebaseConfigured = false;
+        
+        try {
+            if (firebaseConfig.apiKey !== "YOUR_API_KEY_HERE") {
+                firebase.initializeApp(firebaseConfig);
+                db = firebase.firestore();
+                isFirebaseConfigured = true;
+                console.log("✅ Firebase initialized successfully");
+            } else {
+                console.warn("⚠️ Firebase not configured. Please update firebaseConfig in the HTML file.");
+                alert("⚠️ Firebase Setup Required\n\nPlease follow the SETUP.md instructions to configure your Firebase project.");
+            }
+        } catch (error) {
+            console.error("❌ Firebase initialization error:", error);
+            isFirebaseConfigured = false;
+        }
+
+        // =================================================================
+        // GLOBAL STATE
+        // =================================================================
+        const CHALLENGE_ID = "main-challenge"; // Single challenge for the couple
+        let currentPartner = localStorage.getItem('selectedPartner') || null;
+        let lastSyncedData = null;
+        let autoRefreshInterval = null;
+        
+        // Initialize data structure
+        let challengeData = {
+            startDate: new Date().toISOString().split('T')[0],
+            currentDay: 1,
+            days: {}
+        };
+
+        // =================================================================
+        // PARTNER SELECTION
+        // =================================================================
+        function selectPartner(partner) {
+            currentPartner = partner;
+            localStorage.setItem('selectedPartner', partner);
+            document.getElementById('partnerSelection').classList.add('hidden');
+            initializeApp();
+        }
+
+        function switchPartner() {
+            currentPartner = null;
+            localStorage.removeItem('selectedPartner');
+            document.getElementById('partnerSelection').classList.remove('hidden');
+            if (autoRefreshInterval) {
+                clearInterval(autoRefreshInterval);
+            }
+        }
+
+        // =================================================================
+        // FIREBASE SYNC FUNCTIONS
+        // =================================================================
+        async function loadFromFirestore() {
+            if (!isFirebaseConfigured) {
+                console.log("Firebase not configured, using local storage");
+                return false;
+            }
+
+            try {
+                updateSyncStatus('syncing', '🔄 Syncing...');
+                const docRef = db.collection('challenges').doc(CHALLENGE_ID);
+                const doc = await docRef.get();
+
+                if (doc.exists) {
+                    const data = doc.data();
+                    // Only update if data has changed
+                    const dataString = JSON.stringify(data);
+                    if (dataString !== lastSyncedData) {
+                        challengeData = data;
+                        lastSyncedData = dataString;
+                        renderDay();
+                        console.log("✅ Data loaded from Firestore");
+                    }
+                    updateSyncStatus('success', `✅ Synced ${new Date().toLocaleTimeString()}`);
+                    return true;
+                } else {
+                    // Initialize with default data
+                    await saveToFirestore();
+                    return true;
+                }
+            } catch (error) {
+                console.error("❌ Error loading from Firestore:", error);
+                updateSyncStatus('error', '❌ Sync failed');
+                return false;
+            }
+        }
+
+        async function saveToFirestore() {
+            if (!isFirebaseConfigured) {
+                console.log("Firebase not configured, using local storage");
+                alert('Progress saved locally! Configure Firebase to sync between devices.');
+                return false;
+            }
+
+            try {
+                updateSyncStatus('syncing', '🔄 Saving...');
+                const docRef = db.collection('challenges').doc(CHALLENGE_ID);
+                await docRef.set(challengeData);
+                lastSyncedData = JSON.stringify(challengeData);
+                updateSyncStatus('success', `✅ Saved ${new Date().toLocaleTimeString()}`);
+                console.log("✅ Data saved to Firestore");
+                return true;
+            } catch (error) {
+                console.error("❌ Error saving to Firestore:", error);
+                updateSyncStatus('error', '❌ Save failed');
+                alert('Failed to save to cloud. Check your Firebase configuration.');
+                return false;
+            }
+        }
+
+        function updateSyncStatus(status, message) {
+            const statusEl = document.getElementById('syncStatus');
+            statusEl.textContent = message;
+            statusEl.className = 'sync-status';
+            if (status === 'syncing') {
+                statusEl.classList.add('syncing');
+            } else if (status === 'error') {
+                statusEl.classList.add('error');
+            }
+            statusEl.classList.remove('hidden');
+        }
+
+        function startAutoRefresh() {
+            if (autoRefreshInterval) {
+                clearInterval(autoRefreshInterval);
+            }
+            // Refresh every 3 seconds
+            autoRefreshInterval = setInterval(() => {
+                loadFromFirestore();
+            }, 3000);
+        }
+
+        const tasks = [
+            { id: 'workout1', title: 'Workout #1 - Sweat (45 min)', description: 'Outdoor movement - walk, run, hike, or cycle' },
+            { id: 'workout2', title: 'Workout #2 - Strength/Skill (45 min)', description: 'Strength, yoga, or skill-based training' },
+            { id: 'diet', title: 'Clean Diet', description: 'No sugar, alcohol, or fried food. Whole foods only.' },
+            { id: 'water', title: 'Hydration', description: 'Minimum 3L water consumed' },
+            { id: 'smoothie', title: 'Protein Smoothie', description: 'Daily protein smoothie consumed' },
+            { id: 'education', title: 'Education (30 min)', description: 'Reading or learning session completed' },
+            { id: 'photo', title: 'Progress Photo', description: 'Daily accountability photo taken' }
+        ];
+
+        const weekChallenges = [
+            { week: 1, focus: 'Consistency', challenge: 'No missed workouts, no excuses.' },
+            { week: 2, focus: 'Control', challenge: '0 social media scrolling after 8 PM.' },
+            { week: 3, focus: 'Discomfort', challenge: 'Cold shower every morning.' },
+            { week: 4, focus: 'Focus', challenge: 'Choose one long-term couple goal, write daily affirmations about it.' },
+            { week: 5, focus: 'Endurance', challenge: '60-min hike or walk on Sunday.' },
+            { week: 6, focus: 'Sacrifice', challenge: 'Give up one comfort (Netflix, dessert, etc.) for 7 days.' },
+            { week: 7, focus: 'Execution', challenge: 'Crush one shared creative or financial milestone.' },
+            { week: 8, focus: 'Stillness', challenge: 'Sunrise meditation together each morning.' },
+            { week: 9, focus: 'Completion', challenge: 'Plan your next 75 days—no regression.' },
+            { week: 10, focus: 'Excellence', challenge: 'Perfect execution - no compromises.' },
+            { week: 11, focus: 'Mastery', challenge: 'Teach someone else what you\'ve learned.' }
+        ];
+
+        const quotes = [
+            "The only person you are destined to become is the person you decide to be.",
+            "Discipline equals freedom.",
+            "You don't have to be extreme, just consistent.",
+            "Success is the sum of small efforts repeated day in and day out.",
+            "The pain you feel today will be the strength you feel tomorrow.",
+            "Champions are made from something deep inside - a desire, a dream, a vision.",
+            "Your mind is a powerful thing. When you fill it with positive thoughts, your life will start to change.",
+            "The difference between who you are and who you want to be is what you do.",
+            "Don't limit your challenges. Challenge your limits.",
+            "Strength doesn't come from what you can do. It comes from overcoming the things you once thought you couldn't."
+        ];
+
+        function initializeDay(dayNum) {
+            if (!challengeData.days[dayNum]) {
+                challengeData.days[dayNum] = {
+                    partner1: {
+                        tasks: {},
+                        reflection: ''
+                    },
+                    partner2: {
+                        tasks: {},
+                        reflection: ''
+                    },
+                    relationship: {
+                        lead: '',
+                        improve: ''
+                    },
+                    completed: false
+                };
+            }
+        }
+
+        function renderTasks(partner, containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            
+            const dayData = challengeData.days[challengeData.currentDay];
+            if (!dayData) return;
+            
+            tasks.forEach(task => {
+                const isCompleted = dayData[partner].tasks[task.id] || false;
+                
+                const taskElement = document.createElement('div');
+                taskElement.className = `task-item ${isCompleted ? 'completed' : ''}`;
+                
+                taskElement.innerHTML = `
+                    <input type="checkbox" 
+                           class="task-checkbox" 
+                           id="${partner}-${task.id}"
+                           ${isCompleted ? 'checked' : ''}
+                           onchange="toggleTask('${partner}', '${task.id}')">
+                    <label class="task-label" for="${partner}-${task.id}">
+                        <div class="task-title">${task.title}</div>
+                        <div class="task-description">${task.description}</div>
+                    </label>
+                `;
+                
+                container.appendChild(taskElement);
+            });
+        }
+
+        async function toggleTask(partner, taskId) {
+            const dayData = challengeData.days[challengeData.currentDay];
+            dayData[partner].tasks[taskId] = !dayData[partner].tasks[taskId];
+            renderDay();
+            updateProgress();
+            // Auto-save to cloud
+            await saveToFirestore();
+        }
+
+        function updateProgress() {
+            const dayData = challengeData.days[challengeData.currentDay];
+            if (!dayData) return;
+            
+            let totalTasks = tasks.length * 2;
+            let completedTasks = 0;
+            
+            ['partner1', 'partner2'].forEach(partner => {
+                tasks.forEach(task => {
+                    if (dayData[partner].tasks[task.id]) {
+                        completedTasks++;
+                    }
+                });
+            });
+            
+            const percentage = Math.round((completedTasks / totalTasks) * 100);
+            document.getElementById('completionRate').textContent = `${percentage}%`;
+            
+            // Update streak
+            let streak = 0;
+            for (let i = 1; i <= challengeData.currentDay; i++) {
+                if (challengeData.days[i] && isDayComplete(i)) {
+                    streak++;
+                } else {
+                    streak = 0;
+                }
+            }
+            document.getElementById('currentStreak').textContent = streak;
+        }
+
+        function isDayComplete(dayNum) {
+            const dayData = challengeData.days[dayNum];
+            if (!dayData) return false;
+            
+            for (const partner of ['partner1', 'partner2']) {
+                for (const task of tasks) {
+                    if (!dayData[partner].tasks[task.id]) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        async function changeDay(direction) {
+            await saveCurrentDayData();
+            challengeData.currentDay = Math.max(1, Math.min(75, challengeData.currentDay + direction));
+            renderDay();
+        }
+
+        async function saveCurrentDayData() {
+            const dayData = challengeData.days[challengeData.currentDay];
+            if (!dayData) return;
+            
+            dayData.partner1.reflection = document.getElementById('partner1Reflection').value;
+            dayData.partner2.reflection = document.getElementById('partner2Reflection').value;
+            dayData.relationship.lead = document.getElementById('leadReflection').value;
+            dayData.relationship.improve = document.getElementById('improveReflection').value;
+            
+            // Auto-save to cloud
+            await saveToFirestore();
+        }
+
+        function renderDay() {
+            initializeDay(challengeData.currentDay);
+            
+            const weekNum = Math.ceil(challengeData.currentDay / 7);
+            document.getElementById('currentDayNumber').textContent = challengeData.currentDay;
+            document.getElementById('weekNumber').textContent = weekNum;
+            document.getElementById('currentDayDisplay').textContent = `Day ${challengeData.currentDay} - Week ${weekNum}`;
+            
+            // Update week challenge
+            const weekChallenge = weekChallenges[weekNum - 1] || weekChallenges[weekChallenges.length - 1];
+            document.getElementById('weekChallenge').innerHTML = `
+                <h3>Week ${weekNum} Challenge: ${weekChallenge.focus}</h3>
+                <p>${weekChallenge.challenge}</p>
+            `;
+            
+            // Render tasks
+            renderTasks('partner1', 'partner1Tasks');
+            renderTasks('partner2', 'partner2Tasks');
+            
+            // Load reflections
+            const dayData = challengeData.days[challengeData.currentDay];
+            document.getElementById('partner1Reflection').value = dayData.partner1.reflection || '';
+            document.getElementById('partner2Reflection').value = dayData.partner2.reflection || '';
+            document.getElementById('leadReflection').value = dayData.relationship.lead || '';
+            document.getElementById('improveReflection').value = dayData.relationship.improve || '';
+            
+            updateProgress();
+            renderCalendar();
+            
+            // Update quote
+            const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+            document.getElementById('quote').textContent = `"${randomQuote}"`;
+        }
+
+        function renderCalendar() {
+            const grid = document.getElementById('calendarGrid');
+            grid.innerHTML = '';
+            
+            for (let day = 1; day <= 75; day++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                dayElement.textContent = day;
+                
+                if (challengeData.days[day]) {
+                    if (isDayComplete(day)) {
+                        dayElement.classList.add('completed');
+                    } else {
+                        const dayData = challengeData.days[day];
+                        let hasAnyTask = false;
+                        ['partner1', 'partner2'].forEach(partner => {
+                            if (Object.values(dayData[partner].tasks).some(v => v)) {
+                                hasAnyTask = true;
+                            }
+                        });
+                        if (hasAnyTask) {
+                            dayElement.classList.add('partial');
+                        }
+                    }
+                } else if (day < challengeData.currentDay) {
+                    dayElement.classList.add('missed');
+                } else {
+                    dayElement.classList.add('future');
+                }
+                
+                if (day === challengeData.currentDay) {
+                    dayElement.classList.add('current');
+                }
+                
+                dayElement.onclick = () => {
+                    saveCurrentDayData();
+                    challengeData.currentDay = day;
+                    renderDay();
+                };
+                
+                grid.appendChild(dayElement);
+            }
+        }
+
+        async function saveDay() {
+            await saveCurrentDayData();
+            alert('Progress saved! Keep crushing it! 💪');
+        }
+
+        async function resetChallenge() {
+            if (confirm('Are you sure you want to reset the entire challenge? This cannot be undone.')) {
+                challengeData = {
+                    startDate: new Date().toISOString().split('T')[0],
+                    currentDay: 1,
+                    days: {}
+                };
+                await saveToFirestore();
+                renderDay();
+                alert('Challenge reset. Time to go harder! 🔥');
+            }
+        }
+
+        // =================================================================
+        // APP INITIALIZATION
+        // =================================================================
+        async function initializeApp() {
+            // Load data from Firestore
+            const loaded = await loadFromFirestore();
+            
+            // Render the current day
+            renderDay();
+            
+            // Start auto-refresh if Firebase is configured
+            if (isFirebaseConfigured) {
+                startAutoRefresh();
+            }
+        }
+
+        // Check if partner is already selected
+        if (currentPartner) {
+            document.getElementById('partnerSelection').classList.add('hidden');
+            initializeApp();
+        } else {
+            // Show partner selection screen
+            document.getElementById('partnerSelection').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
